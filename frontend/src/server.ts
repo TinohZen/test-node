@@ -6,12 +6,17 @@ import {
 } from "@angular/ssr/node";
 import express from "express";
 import { join } from "node:path";
+import { existsSync } from "node:fs";
 
+// Le dossier où sont construits vos fichiers (généralement dans dist/app/browser)
 const browserDistFolder = join(import.meta.dirname, "../browser");
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+/**
+ * 1. Servir les fichiers statiques (JS, CSS, images, etc.)
+ */
 app.use(
   express.static(browserDistFolder, {
     maxAge: "1y",
@@ -21,7 +26,7 @@ app.use(
 );
 
 /**
- * Handle all other requests by rendering the Angular application.
+ * 2. Gestion SSR par Angular
  */
 app.use((req, res, next) => {
   angularApp
@@ -32,12 +37,25 @@ app.use((req, res, next) => {
     .catch(next);
 });
 
+/**
+ * 3. Fallback : Si aucune route ne correspond (cas typique du rafraîchissement),
+ * on renvoie index.html pour que le routeur d'Angular s'occupe de la page.
+ */
+app.use((req, res) => {
+  const indexHtml = join(browserDistFolder, "index.html");
+  if (existsSync(indexHtml)) {
+    res.sendFile(indexHtml);
+  } else {
+    res.status(404).send("Not Found");
+  }
+});
+
+/**
+ * Lancement du serveur (utilisé uniquement en local)
+ */
 if (isMainModule(import.meta.url) || process.env["pm_id"]) {
-  const port = process.env["PORT"] || 4200; // On utilise le port 4200 par défaut
-  app.listen(port, (error) => {
-    if (error) {
-      throw error;
-    }
+  const port = process.env["PORT"] || 4200;
+  app.listen(port, () => {
     console.log(`Frontend Angular listening on http://localhost:${port}`);
   });
 }
