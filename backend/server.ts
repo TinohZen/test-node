@@ -5,25 +5,26 @@ const PORT = process.env["PORT"] || 3000;
 
 async function startServer() {
   try {
+    // 1. Authentification à la base de données
     await sequelize.authenticate();
-    console.log(
-      "✅ Connection to the database has been established successfully."
-    );
+    console.log("✅ Connexion à la base de données établie avec succès.");
 
-    // MODIFICATION ICI : On enlève { alter: true }
-    // Sequelize créera les tables si elles manquent, sinon il ne fait rien.
+    // 2. Synchronisation des modèles
+    // En production, on utilise une sync simple pour éviter d'écraser des données par erreur
     await sequelize.sync();
+    console.log("✅ Modèles synchronisés.");
 
-    console.log("✅ Database models synchronized.");
-
+    // 3. Lancement du serveur
     app.listen(PORT, () => {
-      console.log(`🚀 Backend server is running on http://localhost:${PORT}`);
+      console.log(`🚀 Serveur actif sur le port ${PORT}`);
+      if (process.env["NODE_ENV"] !== "production") {
+        console.log(`📡 URL locale : http://localhost:${PORT}/api`);
+      }
     });
   } catch (error) {
-    console.error("❌ Unable to connect to the database:", error);
+    console.error("❌ Impossible de démarrer le serveur :", error);
     process.exit(1);
   }
 }
 
-// Lancement du script
 startServer();

@@ -8,7 +8,7 @@ export const sequelize = isProduction
       dialectOptions: {
         ssl: {
           require: true,
-          rejectUnauthorized: false, // Indispensable pour Supabase/Vercel
+          rejectUnauthorized: false, // Indispensable pour la connexion sécurisée à Supabase
         },
       },
       logging: false,
