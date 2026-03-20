@@ -5,12 +5,13 @@ const PORT = process.env["PORT"] || 3000;
 
 async function startServer() {
   try {
-    // 1. Authentification à la base de données
+    // 1. Test de la connexion
     await sequelize.authenticate();
     console.log("✅ Connexion à la base de données établie avec succès.");
 
     // 2. Synchronisation des modèles
-    // En production, on utilise une sync simple pour éviter d'écraser des données par erreur
+    // Note: Puisque tu as créé les tables manuellement sur Supabase via le SQL Editor,
+    // sequelize.sync() vérifiera juste que tout correspond.
     await sequelize.sync();
     console.log("✅ Modèles synchronisés.");
 
@@ -23,7 +24,10 @@ async function startServer() {
     });
   } catch (error) {
     console.error("❌ Impossible de démarrer le serveur :", error);
-    process.exit(1);
+    // On ne kill pas le process en local pour pouvoir débugger plus facilement
+    if (process.env["NODE_ENV"] === "production") {
+      process.exit(1);
+    }
   }
 }
 
