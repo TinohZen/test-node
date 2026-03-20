@@ -1,0 +1,5 @@
+{
+  "name": "Nexus Full-Stack App",
+  "description": "A decoupled full-stack application with Angular, Node.js, Sequelize, and PostgreSQL, managing users, entities, and associations.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,158 @@
+<div class="p-6 bg-slate-900 min-h-screen text-slate-200">
+  <h2 class="text-3xl font-bold text-amber-500 mb-6">
+    Gestion des utilisateurs
+  </h2>
+
+  <!-- Loader -->
+  <div
+    *ngIf="loading()"
+    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div
+      class="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+
+  <!-- FORM CARD -->
+  <div
+    class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-lg mb-8">
+    <h3 class="text-xl font-semibold mb-4">
+      {{ editingId() ? "Edit User" : "Ajouter un nouvel utilisateur" }}
+    </h3>
+
+    <form
+      [formGroup]="userForm"
+      (ngSubmit)="onSubmit()"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- USERNAME -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-400 mb-1">Nom d'utilisateur</label>
+        <input
+          formControlName="username"
+          type="text"
+          placeholder="Albertino"
+          class="bg-slate-900 border border-slate-700 text-white px-4 py-2 rounded-lg focus:border-blue-500 outline-none" />
+      </div>
+
+      <!-- EMAIL -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-400 mb-1">Email</label>
+        <input
+          formControlName="email"
+          type="email"
+          placeholder="albertino@example.com"
+          class="bg-slate-900 border border-slate-700 text-white px-4 py-2 rounded-lg focus:border-blue-500 outline-none" />
+      </div>
+
+      <!-- PASSWORD -->
+
+      <div class="flex flex-col relative">
+        <label class="text-sm text-slate-400 mb-1">Mot de passe</label>
+        <div class="relative">
+          <input
+            formControlName="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            placeholder="••••••••"
+            class="w-full bg-slate-900 border border-slate-700 text-white px-4 py-2 pr-10 rounded-lg focus:border-blue-500 outline-none transition-colors" />
+
+          <button
+            type="button"
+            (click)="togglePassword()"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors focus:outline-none">
+            <i
+              class="fa-solid"
+              [ngClass]="showPassword() ? 'fa-eye-slash' : 'fa-eye'"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="col-span-full flex gap-3 mt-2">
+        <button
+          *ngIf="editingId()"
+          type="button"
+          (click)="cancelEdit()"
+          class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-lg transition">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          [disabled]="userForm.invalid"
+          class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition">
+          {{ editingId() ? "Mise à jour" : "Créer" }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- USERS TABLE -->
+
+  <div
+    class="bg-slate-800 border border-slate-700 rounded-xl shadow-lg overflow-hidden">
+    <table class="w-full text-left text-sm">
+      <thead class="border-b border-slate-700 text-slate-400">
+        <tr>
+          <th class="p-3">ID</th>
+          <th class="p-3">Utilisateur</th>
+          <th class="p-3">Email</th>
+          <th class="p-3">Entités</th>
+          <th class="p-3 text-right">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr
+          *ngFor="let user of users()"
+          class="border-b border-slate-800 hover:bg-slate-800 transition">
+          <td class="p-3">#{{ user.id }}</td>
+
+          <td class="p-3 font-semibold">
+            {{ user.username }}
+          </td>
+
+          <td class="p-3 text-slate-400">
+            {{ user.email }}
+          </td>
+
+          <td class="p-3">
+            <div class="flex flex-wrap gap-2">
+              <span
+                *ngFor="let entity of user.Entities"
+                class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-1 rounded-full text-xs">
+                {{ entity.name }}
+              </span>
+            </div>
+          </td>
+
+          <td class="p-3 text-right space-x-4">
+            <button
+              (click)="editUser(user)"
+              class="inline-flex items-center text-amber-400 hover:scale-110 transition">
+              <i class="fa-solid fa-pen-to-square text-lg"></i>
+              <span class="hidden lg:inline ml-2 text-sm font-medium"
+                >Modifier</span
+              >
+            </button>
+
+            <button
+              (click)="deleteUser(user.id!)"
+              class="inline-flex items-center text-red-500 hover:scale-110 transition">
+              <i class="fa-solid fa-trash-can text-lg"></i>
+              <span class="hidden lg:inline ml-2 text-sm font-medium"
+                >Supprimer</span
+              >
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- EMPTY STATE -->
+
+    <div
+      *ngIf="users().length === 0 && !loading()"
+      class="p-10 text-center text-slate-400">
+      <i class="fas fa-users-slash text-3xl mb-3"></i>
+      <p>Aucun utilisateur trouvé.</p>
+    </div>
+  </div>
+</div>
