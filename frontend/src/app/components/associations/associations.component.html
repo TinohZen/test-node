@@ -112,12 +112,12 @@
           <tr class="hover:bg-slate-700/50 transition-colors">
             <td class="px-6 py-4 text-slate-500 text-sm">#{{ assoc.id }}</td>
             <td class="px-6 py-4 font-medium">
-              {{ getUserName($any(assoc).user_id || assoc.userId) }}
+              {{ getUserName($any(assoc).userId || assoc.userId) }}
             </td>
             <td class="px-6 py-4">
               <span
                 class="px-2 py-1 bg-purple-500/10 text-purple-400 rounded-md text-sm border border-purple-500/20">
-                {{ getEntityName($any(assoc).entity_id || assoc.entityId) }}
+                {{ getEntityName($any(assoc).entityId || assoc.entityId) }}
               </span>
             </td>
             <td class="px-6 py-4 text-right">
