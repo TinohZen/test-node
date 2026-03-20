@@ -153,8 +153,6 @@ export class AssociationsComponent implements OnInit {
     this.assocForm.reset({ userId: "", entityId: "" });
   }
 
-  // Remplace ces deux fonctions dans associations.component.ts
-
   getUserName(id: any) {
     if (!id) return "Utilisateur inconnu";
 

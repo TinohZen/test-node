@@ -6,14 +6,13 @@ const app = express();
 
 // Liste des origines autorisées
 const allowedOrigins = [
-  "https://test-nodefrontend.vercel.app",
-  "http://localhost:4200",
+  "https://test-nodefrontend.vercel.app", // pour prod
+  "http://localhost:4200", // pour local
 ];
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Autorise les requêtes sans origine (comme Postman) ou les domaines de la liste
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
@@ -27,7 +26,6 @@ app.use(
 
 app.use(express.json());
 
-// Préfixe toutes les routes par /api
 app.use("/api", apiRoutes);
 
 export default app;

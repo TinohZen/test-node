@@ -6,7 +6,7 @@ const isProduction = process.env["NODE_ENV"] === "production";
 export const sequelize = isProduction
   ? new Sequelize(process.env["DATABASE_URL"], {
       dialect: "postgres",
-      dialectModule: pg, // <--- Indispensable pour Vercel
+      dialectModule: pg,
       dialectOptions: {
         ssl: {
           require: true,
@@ -17,6 +17,6 @@ export const sequelize = isProduction
     })
   : new Sequelize({
       dialect: "sqlite",
-      storage: "./database.sqlite", // En local, SQLite n'a pas besoin de dialectModule
+      storage: "./database.sqlite",
       logging: console.log,
     });

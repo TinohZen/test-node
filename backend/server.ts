@@ -10,8 +10,7 @@ async function startServer() {
     console.log("✅ Connexion à la base de données établie avec succès.");
 
     // 2. Synchronisation des modèles
-    // Note: Puisque tu as créé les tables manuellement sur Supabase via le SQL Editor,
-    // sequelize.sync() vérifiera juste que tout correspond.
+
     await sequelize.sync();
     console.log("✅ Modèles synchronisés.");
 
@@ -24,7 +23,7 @@ async function startServer() {
     });
   } catch (error) {
     console.error("❌ Impossible de démarrer le serveur :", error);
-    // On ne kill pas le process en local pour pouvoir débugger plus facilement
+
     if (process.env["NODE_ENV"] === "production") {
       process.exit(1);
     }

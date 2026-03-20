@@ -10,10 +10,9 @@ import { environment } from "../../environments/environment";
 export class ApiService {
   private http = inject(HttpClient);
 
-  // Utilise l'URL définie dans les fichiers src/environments/
   private apiUrl = environment.apiUrl;
 
-  /** * SECTION : USERS
+  /*SECTION : USERS
    * Routes correspondantes : /api/users
    */
   getUsers(): Observable<User[]> {
@@ -36,7 +35,7 @@ export class ApiService {
     return this.http.delete<void>(`${this.apiUrl}/users/${id}`);
   }
 
-  /** * SECTION : ENTITIES
+  /* SECTION : ENTITIES
    * Routes correspondantes : /api/entities
    */
   getEntities(): Observable<Entity[]> {
@@ -59,14 +58,13 @@ export class ApiService {
     return this.http.delete<void>(`${this.apiUrl}/entities/${id}`);
   }
 
-  /** * SECTION : ASSOCIATIONS (UserEntity)
+  /* SECTION : ASSOCIATIONS (UserEntity)
    * Routes correspondantes : /api/user-entities
    */
   getUserEntities(): Observable<UserEntity[]> {
     return this.http.get<UserEntity[]>(`${this.apiUrl}/user-entities`);
   }
 
-  // Cette méthode crée une nouvelle ligne dans la table de jointure
   addEntityToUser(userId: number, entityId: number): Observable<UserEntity> {
     return this.http.post<UserEntity>(`${this.apiUrl}/user-entities`, {
       userId,
@@ -74,7 +72,6 @@ export class ApiService {
     });
   }
 
-  // Cette méthode met à jour une association existante via son ID
   updateUserEntity(
     id: number,
     userId: number,
@@ -86,7 +83,6 @@ export class ApiService {
     });
   }
 
-  // Cette méthode supprime l'association (la ligne dans la table de jointure)
   removeEntityFromUser(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/user-entities/${id}`);
   }

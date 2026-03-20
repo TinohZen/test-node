@@ -134,7 +134,7 @@ export class UsersComponent implements OnInit {
         this.api.deleteUser(id).subscribe({
           next: () => {
             this.loadUsers();
-            // Petit ajout optionnel pour le feedback
+
             Swal.fire({
               icon: "success",
               title: "Supprimé !",

@@ -15,7 +15,6 @@ export const getUserById = async (
   res: Response
 ): Promise<void> => {
   try {
-    // Conversion propre en nombre pour Sequelize
     const id = Number(req.params.id);
     const user = await User.findByPk(id, { include: Entity });
 
@@ -109,7 +108,6 @@ export const getUserEntities = async (req: Request, res: Response) => {
   }
 };
 
-// Mettre à jour une association (PUT /user-entities/:id)
 export const updateUserEntity = async (
   req: Request,
   res: Response
@@ -135,7 +133,6 @@ export const updateUserEntity = async (
   }
 };
 
-// Supprimer une association (DELETE /user-entities/:id)
 export const deleteUserEntity = async (
   req: Request,
   res: Response
