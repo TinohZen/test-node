@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { User, Entity } from "../models/index.js";
-import { UserEntity } from "../models/index.js";
+import { User, Entity, UserEntity } from "../models/index.js";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -16,9 +15,10 @@ export const getUserById = async (
   res: Response
 ): Promise<void> => {
   try {
-    const user = await User.findByPk(req.params["id"] as string, {
-      include: Entity,
-    });
+    // Conversion propre en nombre pour Sequelize
+    const id = Number(req.params.id);
+    const user = await User.findByPk(id, { include: Entity });
+
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
@@ -44,8 +44,10 @@ export const updateUser = async (
   res: Response
 ): Promise<void> => {
   try {
+    const id = Number(req.params.id);
     const { username, email, password } = req.body;
-    const user = await User.findByPk(req.params["id"] as string);
+
+    const user = await User.findByPk(id);
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
@@ -62,7 +64,9 @@ export const deleteUser = async (
   res: Response
 ): Promise<void> => {
   try {
-    const user = await User.findByPk(req.params["id"] as string);
+    const id = Number(req.params.id);
+    const user = await User.findByPk(id);
+
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
@@ -81,8 +85,8 @@ export const addEntityToUser = async (
   try {
     const { userId, entityId } = req.body;
 
-    const user = await User.findByPk(userId);
-    const entity = await Entity.findByPk(entityId);
+    const user = await User.findByPk(Number(userId));
+    const entity = await Entity.findByPk(Number(entityId));
 
     if (!user || !entity) {
       res.status(404).json({ error: "User or Entity not found" });
@@ -104,14 +108,14 @@ export const getUserEntities = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to fetch associations" });
   }
 };
+
 // Mettre à jour une association (PUT /user-entities/:id)
 export const updateUserEntity = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    // Correction : Conversion explicite en string pour Sequelize
-    const id = req.params["id"] as string;
+    const id = Number(req.params.id);
     const { userId, entityId } = req.body;
 
     const association = await UserEntity.findByPk(id);
@@ -122,7 +126,6 @@ export const updateUserEntity = async (
     }
 
     await association.update({ userId, entityId });
-
     res.status(200).json({
       message: "Association mise à jour avec succès",
       association,
@@ -138,9 +141,7 @@ export const deleteUserEntity = async (
   res: Response
 ): Promise<void> => {
   try {
-    // Correction : Conversion explicite ici aussi (Ligne 146 de tes logs)
-    const id = req.params["id"] as string;
-
+    const id = Number(req.params.id);
     const association = await UserEntity.findByPk(id);
 
     if (!association) {
@@ -149,7 +150,6 @@ export const deleteUserEntity = async (
     }
 
     await association.destroy();
-
     res.status(200).json({ message: "Association supprimée avec succès" });
   } catch (error) {
     res.status(500).json({ error: "Erreur lors de la suppression" });
