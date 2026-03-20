@@ -104,14 +104,14 @@ export const getUserEntities = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to fetch associations" });
   }
 };
-
 // Mettre à jour une association (PUT /user-entities/:id)
 export const updateUserEntity = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const { id } = req.params;
+    // Correction : Conversion explicite en string pour Sequelize
+    const id = req.params["id"] as string;
     const { userId, entityId } = req.body;
 
     const association = await UserEntity.findByPk(id);
@@ -121,7 +121,6 @@ export const updateUserEntity = async (
       return;
     }
 
-    // Mise à jour des clés étrangères
     await association.update({ userId, entityId });
 
     res.status(200).json({
@@ -129,9 +128,7 @@ export const updateUserEntity = async (
       association,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Erreur lors de la mise à jour de l'association" });
+    res.status(500).json({ error: "Erreur lors de la mise à jour" });
   }
 };
 
@@ -141,7 +138,8 @@ export const deleteUserEntity = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { id } = req.params;
+    // Correction : Conversion explicite ici aussi (Ligne 146 de tes logs)
+    const id = req.params["id"] as string;
 
     const association = await UserEntity.findByPk(id);
 
@@ -154,8 +152,6 @@ export const deleteUserEntity = async (
 
     res.status(200).json({ message: "Association supprimée avec succès" });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Erreur lors de la suppression de l'association" });
+    res.status(500).json({ error: "Erreur lors de la suppression" });
   }
 };
