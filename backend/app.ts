@@ -7,7 +7,7 @@ const app = express();
 // Configuration CORS : Autorise les requêtes provenant de ton futur frontend Vercel
 app.use(
   cors({
-    origin: "https://test-nodefrontend.vercel.app", //  URL frontend
+    origin: "https://test-nodefrontend.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
